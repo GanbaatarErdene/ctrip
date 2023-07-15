@@ -1,38 +1,49 @@
+from ctrip_sync import request
+# from ctrip_sync import token
 from fastapi import FastAPI
-from pymongo import MongoClient
 from redis import Redis
+from database.mongodb import employee
+from database.mongodb import cityCollection
+from database.mongodb import hotelsCollection
+from database.mongodb import hotelCollection
+from dotenv import load_dotenv
+from dotenv import dotenv_values
+import requests
+import json
+import redis
+import time
 
+config = dotenv_values(".env")
 app = FastAPI()
+ctrip = request.HotelDataFetcher()
 
 @app.get("/")
 def read_root():
-    return{"Helloooo": "World"}
+    return config['MONGO_DB']
 
-# # MongoDB
-mongo_client = MongoClient("mongodb://mongodb:27017/")
-db = mongo_client.hrms
-employee = db["employee"]
-def todo_serializer(todo) -> dict:
-    return {
-        "id": str(todo["_id"]),
-        "name": todo["name"],
-    }
+@app.get("/city")
+def read_root():
+    ctrip.get_city()
 
-def todos_serializer(todos) -> list:
-    return [todo_serializer(todo) for todo in todos]
-# # Redis
-# redis_client = Redis(host="redis", port=6379)
+@app.get("/hotels")
+def read_root():
+    ctrip.get_hotels()
 
-# @app.get("/")
-# def read_root():
-#     return {"Hello": "World"}
+@app.get("/hotel")
+def read_root():
+     ctrip.get_hotel()
+ 
 
-@app.get("/mongo")
-def test_mongo():
-    a = todos_serializer(employee.find())
-    return a
 
-# @app.get("/redis")
-# def test_redis():
-#     redis_client.set("message", "Redis is connected!")
-#     return {"status": "success"}
+    
+
+    
+
+        
+
+
+
+
+
+
+

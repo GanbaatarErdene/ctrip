@@ -1,14 +1,30 @@
 version: '3'
 services:
-  fastapi:
-    build:
-      context: .
-      dockerfile: Dockerfile
+  app:
+      container_name: app
+      build: .
+      command: bash -c "uvicorn main:app --host 0.0.0.0 --port 8000 --reload"
+      volumes:
+        - .:/app
+      ports:
+        - 8001:8000
+      restart: always
+
+  redis:
+    image: redis:6.2-alpine
+    # image: redis:latest
     ports:
-      - 8000:8000
-    depends_on:
-      - mongodb
-      - redis
+      - 6379:6379 
+
+  # fastapi:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - 8000:8000
+  #   depends_on:
+  #     - mongodb
+  #     # - redis
 
   mongodb:
     image: mongo:latest
@@ -17,7 +33,8 @@ services:
     volumes:
       - ./mongodb/data:/data/db
 
-  redis:
-    image: redis:latest
-    ports:
-      - 6379:6379
+  # redis:
+  #   image: redis:6.2-alpine
+  #   # image: redis:latest
+  #   # ports:
+  #     # - 6379:6379
