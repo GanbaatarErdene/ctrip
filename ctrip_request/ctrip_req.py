@@ -2,13 +2,7 @@ from fastapi import FastAPI
 import requests
 import json
 from dotenv import dotenv_values
-from database.mongodb import cityCollection
-from database.mongodb import hotelsCollection
-from database.mongodb import hotelCollection
-from database.mongodb import changeCollection
 from ctrip_sync import ctripToken
-
-from datetime import datetime,timedelta
 import json
 
 config = dotenv_values(".env")
@@ -39,17 +33,17 @@ class HotelDataRequest(object):
         response = self.session.post(url, data=json.dumps(data), headers=headers, verify=False, timeout=180)
         return response.json()
     
-    def get_city(self):
+    def get_city(self,last_record_id):
         data = {
             "SearchCandidate": {
                 "SearchByType": {
                     "SearchType": "2",
-                    "IsHaveHotel": "F"
+                    "IsHaveHotel": "T"
                 }
             },
             "PagingSettings": {
-                "PageSize": 100,
-                "LastRecordID": ""
+                "PageSize": 2000,
+                "LastRecordID": f"{last_record_id}"
             }
         }
         response = self.get_data(data, self.ICODE)
