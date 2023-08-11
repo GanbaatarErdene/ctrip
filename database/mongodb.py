@@ -8,8 +8,9 @@ db = mongo_client.hrms
 
 cityCollection = db["city"]
 hotelsCollection = db["hotels"]
-hotelCollection = db["hotel"]
+detailCollection = db["hotel"]
 changeCollection = db["change"]
+testCollection = db["test"]
 
 
 
